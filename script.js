@@ -9,7 +9,7 @@ const MAX_RESULTS = 20;
 // Posibles nombres de columna para cada campo (se buscan sin importar mayúsculas)
 const FIELD_MAP = {
     nombre: ["NOMBRE_PDV", "NOMBRE", "PDV", "RAZON_SOCIAL", "NOMBRE_ESTABLECIMIENTO"],
-    codigo: ["CODIGO_PDV", "CODIGO", "COD_PDV", "ID_PDV", "ID"],
+    codigo: ["SAP", "CODIGO_PDV", "CODIGO", "COD_PDV", "ID_PDV"],
     direccion: ["DIRECCION", "DIRECCION_PDV", "DIR"],
     barrio: ["BARRIO"],
     ciudad: ["CIUDAD", "MUNICIPIO"],
@@ -50,7 +50,7 @@ function mapPdv(row) {
 function extractRows(data) {
     if (Array.isArray(data)) return data;
     if (data && typeof data === "object") {
-        for (const key of ["data", "results", "rows", "items"]) {
+        for (const key of ["result", "data", "results", "rows", "items"]) {
             if (Array.isArray(data[key])) return data[key];
         }
     }
@@ -165,7 +165,8 @@ function mapsUrl(pdv) {
     if (pdv.latitud && pdv.longitud) {
         return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${pdv.latitud},${pdv.longitud}`)}`;
     }
-    const address = [pdv.direccion, pdv.barrio, pdv.ciudad, pdv.departamento].filter(Boolean).join(", ");
+    // Sin dirección se busca por nombre del PDV + ciudad
+    const address = [pdv.direccion || pdv.nombre, pdv.barrio, pdv.ciudad, pdv.departamento].filter(Boolean).join(", ");
     return address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}` : "";
 }
 
@@ -177,7 +178,7 @@ function renderPdv(pdv, index) {
         `<span class="material-icons copy-icon" title="Copiar" data-copy="${escapeHtml(text)}" onclick="copyText(this)">content_copy</span>`;
 
     const items = [];
-    if (pdv.codigo) items.push(`<li><span class="material-icons icon-tipo">tag</span><strong>Código:</strong> ${escapeHtml(pdv.codigo)}${copyIcon(pdv.codigo)}</li>`);
+    if (pdv.codigo) items.push(`<li><span class="material-icons icon-tipo">tag</span><strong>SAP:</strong> ${escapeHtml(pdv.codigo)}${copyIcon(pdv.codigo)}</li>`);
     if (pdv.direccion) items.push(`<li><span class="material-icons icon-tipo">place</span><strong>Dirección:</strong> ${escapeHtml(pdv.direccion)}${copyIcon(pdv.direccion)}</li>`);
     if (lugar) items.push(`<li><span class="material-icons icon-tipo">location_city</span>${escapeHtml(lugar)}</li>`);
     if (pdv.telefono) items.push(`<li><span class="material-icons icon-tipo">phone</span>${escapeHtml(pdv.telefono)}${copyIcon(pdv.telefono)}</li>`);
