@@ -161,18 +161,8 @@ function handleInput() {
     results.innerHTML = found.map(renderPdv).join("");
 }
 
-function mapsUrl(pdv) {
-    if (pdv.latitud && pdv.longitud) {
-        return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${pdv.latitud},${pdv.longitud}`)}`;
-    }
-    // Sin dirección se busca por nombre del PDV + ciudad
-    const address = [pdv.direccion || pdv.nombre, pdv.barrio, pdv.ciudad, pdv.departamento].filter(Boolean).join(", ");
-    return address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}` : "";
-}
-
 function renderPdv(pdv, index) {
     const lugar = [pdv.barrio, pdv.ciudad, pdv.departamento].filter(Boolean).join(", ");
-    const url = mapsUrl(pdv);
 
     const copyIcon = text =>
         `<span class="material-icons copy-icon" title="Copiar" data-copy="${escapeHtml(text)}" onclick="copyText(this)">content_copy</span>`;
@@ -182,7 +172,6 @@ function renderPdv(pdv, index) {
     if (pdv.direccion) items.push(`<li><span class="material-icons icon-tipo">place</span><strong>Dirección:</strong> ${escapeHtml(pdv.direccion)}${copyIcon(pdv.direccion)}</li>`);
     if (lugar) items.push(`<li><span class="material-icons icon-tipo">location_city</span>${escapeHtml(lugar)}</li>`);
     if (pdv.telefono) items.push(`<li><span class="material-icons icon-tipo">phone</span>${escapeHtml(pdv.telefono)}${copyIcon(pdv.telefono)}</li>`);
-    if (url) items.push(`<li><a class="map-link" href="${url}" target="_blank" rel="noopener"><span class="material-icons">map</span>Ver en Google Maps</a></li>`);
 
     return `
         <div class="result-item pdv" style="animation-delay: ${index * 0.03}s">
