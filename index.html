@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador PDVs</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="icon" href="" type="image/png">
+</head>
+<body>
+    <div class="search-container" role="search" aria-label="Buscador de PDVs">
+        <h1 class="searchTitle" id="searchTitle">Búsqueda PDVs</h1>
+
+        <div style="text-align: center; margin-bottom: 15px;">
+            <label class="switch">
+                <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+                <span class="slider"></span>
+            </label>
+            <span id="darkModeLabel">🌙 Modo oscuro</span>
+        </div>
+
+        <select id="clienteSelect" class="client-select" onchange="handleClienteChange()" aria-label="Seleccione el cliente">
+            <option value="" selected disabled>Seleccione el cliente</option>
+            <option value="BUCANEROS">BUCANEROS</option>
+            <option value="CARVAL">CARVAL</option>
+        </select>
+
+        <input type="text" id="searchInput" placeholder="Primero seleccione un cliente" oninput="handleInput()" aria-label="Campo de búsqueda" disabled>
+
+        <div id="status" class="status" aria-live="polite"></div>
+        <div id="results"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
